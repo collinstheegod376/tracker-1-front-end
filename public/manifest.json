@@ -1,0 +1,33 @@
+{
+  "name": "SubTrack - Subscription Manager",
+  "short_name": "SubTrack",
+  "description": "Track and manage all your subscriptions in one place",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050008",
+  "theme_color": "#8b5cf6",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Add Subscription",
+      "url": "/?action=add",
+      "description": "Add a new subscription quickly"
+    }
+  ]
+}
