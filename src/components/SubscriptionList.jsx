@@ -1,210 +1,102 @@
 'use client';
 
-import ServiceLogo from './ServiceLogo';
-
 // ── SubscriptionList ────────────────────────────────────────
-// Displays all subscriptions for the current month.
-// Currency: Nigerian Naira (₦)
+// Displays all subscriptions for the current month
 export default function SubscriptionList({ subscriptions, loading, onEdit, onDelete }) {
-
-  // ── Loading skeleton ──────────────────────────────────────
   if (loading) {
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="animate-pulse rounded-2xl"
-            style={{
-              height: 72,
-              background: '#F0F1FF',
-              border: '1px solid rgba(91,71,224,0.08)',
-            }}
-          />
+          <div key={i} className="glass-light h-16 animate-pulse rounded-xl" />
         ))}
       </div>
     );
   }
 
-  // ── Empty state ───────────────────────────────────────────
   if (subscriptions.length === 0) {
     return (
-      <div
-        className="text-center py-12 rounded-2xl"
-        style={{
-          background: '#FAFBFF',
-          border: '1.5px dashed rgba(91,71,224,0.18)',
-        }}
-      >
-        <p style={{ fontSize: 36, marginBottom: 10 }}>📋</p>
-        <p
-          style={{
-            fontFamily: 'Syne, sans-serif',
-            fontWeight: 600,
-            color: 'var(--text-secondary)',
-            fontSize: '0.9rem',
-          }}
-        >
+      <div className="glass-light p-8 text-center rounded-xl">
+        <p className="text-3xl mb-3">📋</p>
+        <p className="text-purple-400 text-sm font-display" style={{ fontFamily: 'Syne, sans-serif' }}>
           No subscriptions this month
         </p>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: 4 }}>
-          Tap a date or the + button to add one
-        </p>
+        <p className="text-purple-600 text-xs mt-1">Tap a date or the + button to add one</p>
       </div>
     );
   }
 
-  // ── Helpers ───────────────────────────────────────────────
   function daysUntil(dateStr) {
     const due = new Date(dateStr);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+    const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+    return diff;
   }
 
   function dueBadge(days) {
-    if (days < 0)  return { label: 'Overdue', color: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5' };
-    if (days === 0) return { label: 'Today',   color: '#D97706', bg: '#FFFBEB', border: '#FCD34D' };
-    if (days <= 3)  return { label: `${days}d left`, color: '#D97706', bg: '#FFFBEB', border: '#FCD34D' };
-    return { label: `${days}d`, color: '#5B47E0', bg: '#F0EEFF', border: '#C4B8FF' };
+    if (days < 0) return { label: 'Overdue', color: '#ef4444', bg: 'rgba(239,68,68,0.12)' };
+    if (days === 0) return { label: 'Today', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' };
+    if (days <= 3) return { label: `${days}d left`, color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' };
+    return { label: `${days}d`, color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' };
   }
 
-  // Format with commas: 15000 → "15,000.00"
-  function formatNaira(amount) {
-    return parseFloat(amount).toLocaleString('en-NG', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
-  // ── Render list ───────────────────────────────────────────
   return (
     <div className="space-y-3">
       {subscriptions.map((sub, i) => {
-        const days  = daysUntil(sub.due_date);
+        const days = daysUntil(sub.due_date);
         const badge = dueBadge(days);
-        const name  = sub.custom_name || sub.service_name;
+        const name = sub.custom_name || sub.service_name;
 
         return (
           <div
             key={sub.id}
-            className="glass-light animate-slide-in-right"
-            style={{
-              animationDelay: `${i * 0.05}s`,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '14px 16px',
-              borderRadius: 16,
-            }}
+            className="glass-light flex items-center gap-3 px-4 py-3.5 animate-slide-in-right rounded-xl"
+            style={{ animationDelay: `${i * 0.05}s` }}
           >
-            {/* ── Service Logo ─────────────────────────────── */}
-            <ServiceLogo
-              serviceName={sub.service_name}
-              fallbackIcon={sub.icon}
-              fallbackColor={sub.color || '#5B47E0'}
-              size={44}
-            />
+            {/* Icon */}
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+              style={{ background: `${sub.color}25`, border: `1px solid ${sub.color}50` }}
+            >
+              {sub.icon}
+            </div>
 
-            {/* ── Info ─────────────────────────────────────── */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p
-                style={{
-                  fontFamily: 'Syne, sans-serif',
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  color: 'var(--text-primary)',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  marginBottom: 4,
-                }}
-              >
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-white font-display truncate" style={{ fontFamily: 'Syne, sans-serif', fontWeight: 600 }}>
                 {name}
               </p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {/* Due date */}
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                  {new Date(sub.due_date).toLocaleDateString('en-NG', {
-                    month: 'short',
-                    day: 'numeric',
-                  })}
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-xs text-purple-500">
+                  {new Date(sub.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </span>
-
-                {/* Recurring icon */}
                 {sub.recurring && (
-                  <span
-                    title="Recurring monthly"
-                    style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}
-                  >
-                    ↻
-                  </span>
+                  <span className="text-purple-700 text-xs">↻</span>
                 )}
-
-                {/* Due badge */}
                 <span
-                  className="badge"
-                  style={{
-                    color: badge.color,
-                    background: badge.bg,
-                    border: `1px solid ${badge.border}`,
-                  }}
+                  className="text-xs px-1.5 py-0.5 rounded-full"
+                  style={{ color: badge.color, background: badge.bg, fontSize: '10px' }}
                 >
                   {badge.label}
                 </span>
               </div>
             </div>
 
-            {/* ── Price + Actions ───────────────────────────── */}
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <p
-                style={{
-                  fontFamily: 'Syne, sans-serif',
-                  fontWeight: 800,
-                  fontSize: '0.95rem',
-                  color: 'var(--text-primary)',
-                  marginBottom: 6,
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                ₦{formatNaira(sub.price)}
+            {/* Price */}
+            <div className="text-right flex-shrink-0">
+              <p className="text-sm font-display font-700 text-white" style={{ fontFamily: 'Syne, sans-serif' }}>
+                ${parseFloat(sub.price).toFixed(2)}
               </p>
-
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <div className="flex gap-1.5 mt-1 justify-end">
                 <button
                   onClick={() => onEdit(sub)}
-                  style={{
-                    fontSize: '0.72rem',
-                    color: 'var(--accent)',
-                    fontWeight: 600,
-                    background: 'var(--accent-light)',
-                    border: 'none',
-                    borderRadius: 6,
-                    padding: '3px 8px',
-                    cursor: 'pointer',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(91,71,224,0.15)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--accent-light)')}
+                  className="text-purple-500 hover:text-purple-300 text-xs transition-colors"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => onDelete(sub.id)}
-                  style={{
-                    fontSize: '0.72rem',
-                    color: '#DC2626',
-                    fontWeight: 600,
-                    background: '#FEF2F2',
-                    border: 'none',
-                    borderRadius: 6,
-                    padding: '3px 8px',
-                    cursor: 'pointer',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#FEE2E2')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#FEF2F2')}
+                  className="text-red-600 hover:text-red-400 text-xs transition-colors"
                 >
                   Del
                 </button>

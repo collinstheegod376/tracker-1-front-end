@@ -1,139 +1,53 @@
 'use client';
 
-// ── TotalBanner ──────────────────────────────────────────────
-// Displays the total monthly spend prominently at the top.
-// Currency: Nigerian Naira (₦)
+// ── TotalBanner ─────────────────────────────────────────────
+// Displays the total monthly spend prominently at the top
 export default function TotalBanner({ total, count, loading }) {
-  // Format number with commas: 50000 → "50,000"
-  function formatNaira(amount) {
-    return amount.toLocaleString('en-NG', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
   return (
     <div
-      className="relative overflow-hidden"
+      className="glass p-5 relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #5B47E0 0%, #7C6EF8 55%, #9B8BFF 100%)',
-        borderRadius: 20,
-        padding: '20px 24px',
-        boxShadow: '0 8px 32px rgba(91,71,224,0.35), 0 2px 8px rgba(91,71,224,0.2)',
+        background: 'linear-gradient(135deg, rgba(109,40,217,0.25), rgba(76,29,149,0.15))',
+        border: '1px solid rgba(139,92,246,0.3)',
+        boxShadow: '0 0 40px rgba(109,40,217,0.2)',
       }}
     >
-      {/* Decorative background circles */}
+      {/* Background glow orb */}
       <div
-        style={{
-          position: 'absolute',
-          top: -30,
-          right: -20,
-          width: 120,
-          height: 120,
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.08)',
-          pointerEvents: 'none',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: -40,
-          right: 40,
-          width: 90,
-          height: 90,
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)',
-          pointerEvents: 'none',
-        }}
+        className="absolute -top-4 -right-4 w-24 h-24 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.25), transparent)' }}
       />
 
       <div className="relative z-10">
-        {/* Label */}
-        <p
-          className="uppercase tracking-widest"
-          style={{
-            fontFamily: 'Syne, sans-serif',
-            fontWeight: 600,
-            fontSize: '10px',
-            color: 'rgba(255,255,255,0.7)',
-            letterSpacing: '0.12em',
-            marginBottom: 6,
-          }}
-        >
+        <p className="text-xs text-purple-400 uppercase tracking-widest font-display mb-1" style={{ fontFamily: 'Syne, sans-serif' }}>
           Monthly Total
         </p>
 
-        {/* Amount */}
         {loading ? (
-          <div
-            style={{
-              height: 44,
-              width: 160,
-              background: 'rgba(255,255,255,0.15)',
-              borderRadius: 10,
-              marginBottom: 6,
-            }}
-            className="animate-pulse"
-          />
+          <div className="h-10 w-32 bg-purple-900/40 rounded-lg animate-pulse mt-1" />
         ) : (
-          <div className="flex items-baseline gap-1" style={{ marginBottom: 4 }}>
+          <div className="flex items-baseline gap-1">
+            <span className="text-purple-400 text-xl font-300">$</span>
             <span
-              style={{
-                fontFamily: 'Syne, sans-serif',
-                fontWeight: 400,
-                fontSize: '1.4rem',
-                color: 'rgba(255,255,255,0.85)',
-                lineHeight: 1,
-              }}
+              className="text-4xl font-display font-800 text-white"
+              style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, textShadow: '0 0 30px rgba(196,181,253,0.4)' }}
             >
-              ₦
-            </span>
-            <span
-              style={{
-                fontFamily: 'Syne, sans-serif',
-                fontWeight: 800,
-                fontSize: '2.6rem',
-                color: '#FFFFFF',
-                lineHeight: 1,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {formatNaira(total)}
+              {total.toFixed(2)}
             </span>
           </div>
         )}
 
-        {/* Subtitle */}
-        <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.65)' }}>
-          {loading ? '…' : `${count} active subscription${count !== 1 ? 's' : ''}`}
+        <p className="text-xs text-purple-500 mt-1.5">
+          {loading ? '...' : `${count} active subscription${count !== 1 ? 's' : ''}`}
         </p>
       </div>
 
       {/* Yearly projection */}
       {!loading && total > 0 && (
-        <div
-          style={{
-            marginTop: 16,
-            paddingTop: 14,
-            borderTop: '1px solid rgba(255,255,255,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>
-            Yearly projection
-          </span>
-          <span
-            style={{
-              fontFamily: 'Syne, sans-serif',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              color: 'rgba(255,255,255,0.9)',
-            }}
-          >
-            ₦{formatNaira(total * 12)} / yr
+        <div className="mt-3 pt-3 border-t border-purple-800/40 flex items-center justify-between">
+          <span className="text-xs text-purple-500">Yearly projection</span>
+          <span className="text-xs font-display text-purple-300" style={{ fontFamily: 'Syne, sans-serif' }}>
+            ${(total * 12).toFixed(2)} / yr
           </span>
         </div>
       )}
